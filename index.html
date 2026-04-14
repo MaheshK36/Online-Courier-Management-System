@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwiftCourier | Dynamic Online Delivery Tracking</title>
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <i class="fa-solid fa-box-open text-primary"></i> 
+            <span>SwiftCourier</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" id="link-home" class="active">Home</a></li>
+            <li><a href="#" id="link-tracking">Track Parcel</a></li>
+            <li><a href="#" id="link-send" class="hidden">Send Courier</a></li>
+            <li><a href="#" id="link-login">Login / Register</a></li>
+            <li><a href="#" id="link-admin" class="hidden">Admin</a></li>
+            <li><a href="#" id="link-logout" class="hidden text-primary">Logout <span id="nav-user-display" style="font-weight:700"></span></a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main id="app-container">
+        
+        <!-- ================= HOME VIEW ================= -->
+        <section id="view-home" class="view active-view">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>Fast, Reliable, <span class="text-primary">Global.</span></h1>
+                    <p>Delivering your packages safely and on time, anywhere in the world.</p>
+                    <div class="hero-buttons">
+                        <button id="btn-hero-track" class="btn-primary">Track a Parcel</button>
+                        <button id="btn-hero-login" class="btn-secondary">Log In or Register</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="services-grid">
+                <div class="service-card glass-panel">
+                    <i class="fa-solid fa-truck-fast text-primary"></i>
+                    <h3>Express Delivery</h3>
+                    <p>Get your parcels delivered within 24 hours locally with our express dispatch fleet.</p>
+                </div>
+                <div class="service-card glass-panel">
+                    <i class="fa-solid fa-earth-americas text-primary"></i>
+                    <h3>Global Reach</h3>
+                    <p>Seamless international shipping with customs clearance handling included.</p>
+                </div>
+                <div class="service-card glass-panel">
+                    <i class="fa-solid fa-shield-halved text-primary"></i>
+                    <h3>Secure Handling</h3>
+                    <p>Advanced tracking and secure transit guarantee the safety of your high-value items.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SEND COURIER VIEW ================= -->
+        <section id="view-send" class="view hidden-view">
+            <div class="tracking-search-header" style="margin-bottom: 2rem;">
+                <h2>Send <span class="text-primary">Courier</span></h2>
+                <p>Drop a pin on the map to select the destination, then book your parcel.</p>
+            </div>
+
+            <div class="send-grid">
+                <!-- Map Container -->
+                <div class="glass-panel map-panel" style="padding: 10px; display: flex; flex-direction: column;">
+                    <div id="map" style="flex: 1; min-height: 400px; border-radius: 12px; z-index: 1;"></div>
+                    <p class="text-muted text-center" style="margin-top: 10px; font-size: 0.85rem;"><i class="fa-solid fa-circle-info"></i> Click on the map to drop a pin.</p>
+                </div>
+
+                <!-- Form Container -->
+                <div class="glass-panel login-card" style="max-width: 100%; margin: 0; padding: 2.5rem;">
+                    <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fa-solid fa-box text-primary"></i> Parcel Details
+                    </h3>
+                    <form id="form-user-send">
+                        <div class="form-group">
+                            <label>Receiver Name</label>
+                            <input type="text" id="send-receiver" required placeholder="e.g. Aditi Sharma" style="background: rgba(0,0,0,0.4);">
+                        </div>
+                        <div class="form-group">
+                            <label>Destination Location</label>
+                            <textarea id="send-address" required placeholder="Choose a location from the map to set address..." rows="4" style="width: 100%; padding: 0.75rem 1rem; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-family: var(--font-main); resize: none;" readonly></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary full-width" style="margin-top: 1rem;">Book Courier Shipment</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= AUTH (LOGIN / REGISTER) VIEW ================= -->
+        <section id="view-login" class="view hidden-view">
+            <div class="login-container">
+                <div class="glass-panel login-card">
+                    <div class="login-header">
+                        <h2 id="auth-title">Welcome <span class="text-primary">Back</span></h2>
+                        <p id="auth-subtitle">Login to manage your user account.</p>
+                    </div>
+
+                    <!-- User Login Form -->
+                    <form id="form-login">
+                        <div class="form-group">
+                            <label>Username</label>
+                            <div class="input-icon">
+                                <i class="fa-solid fa-user"></i>
+                                <input type="text" id="login-user" required placeholder="User Username">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <div class="input-icon">
+                                <i class="fa-solid fa-lock"></i>
+                                <input type="password" id="login-pass" required placeholder="••••••••">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary full-width">Sign In</button>
+                        
+                        <p class="mt-2 text-center text-muted">
+                            Don't have an account? <a href="#" id="toggle-register" class="text-primary underline-hover">Register Here</a>
+                        </p>
+                    </form>
+
+                    <!-- User Register Form -->
+                    <form id="form-register" class="hidden">
+                        <div class="form-group">
+                            <label>Choose Username</label>
+                            <div class="input-icon">
+                                <i class="fa-solid fa-user-plus"></i>
+                                <input type="text" id="reg-user" required placeholder="e.g. johndoe">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Create Password</label>
+                            <div class="input-icon">
+                                <i class="fa-solid fa-key"></i>
+                                <input type="password" id="reg-pass" required placeholder="••••••••">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary full-width">Create Account</button>
+                        
+                        <p class="mt-2 text-center text-muted">
+                            Already have an account? <a href="#" id="toggle-login" class="text-primary underline-hover">Login Here</a>
+                        </p>
+                    </form>
+
+                    <div style="margin-top: 2.5rem; text-align: center; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                        <p class="text-muted" style="font-size: 0.85rem;">
+                            Internal staff? <a href="#" id="link-goto-admin" class="text-primary underline-hover" style="font-weight: 600;">Admin Portal</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= ADMIN LOGIN VIEW ================= -->
+        <section id="view-admin-login" class="view hidden-view">
+            <div class="login-container">
+                <div class="glass-panel login-card" style="border-top: 4px solid var(--primary);">
+                    <div class="login-header">
+                        <h2>Admin <span class="text-primary">Portal</span></h2>
+                        <p>Authorized access only.</p>
+                    </div>
+
+                    <!-- Admin Login Form -->
+                    <form id="form-admin-login">
+                        <div class="form-group">
+                            <label>Admin ID</label>
+                            <div class="input-icon">
+                                <i class="fa-solid fa-user-shield"></i>
+                                <input type="text" id="admin-login-user" required placeholder="Admin Username">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <div class="input-icon">
+                                <i class="fa-solid fa-lock"></i>
+                                <input type="password" id="admin-login-pass" required placeholder="••••••••">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary full-width">Secure Login</button>
+                        
+                        <p class="mt-2 text-center text-muted">
+                            <i class="fa-solid fa-arrow-left"></i> Return to <a href="#" id="link-back-user-login" class="text-primary underline-hover">User Login</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TRACKING VIEW ================= -->
+        <section id="view-tracking" class="view hidden-view">
+            <div class="tracking-search-header">
+                <h2>Track Your <span class="text-primary">Parcel</span></h2>
+                <p>Enter your tracking number below to get real-time delivery updates.</p>
+                
+                <div class="search-box glass-panel tracking-standalone">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="tracking-input" placeholder="e.g. SC-123456" autocomplete="off">
+                    <button id="btn-track" class="btn-primary">Track</button>
+                </div>
+            </div>
+
+            <!-- Tracking Result Section -->
+            <div id="tracking-result" class="tracking-result-container hidden">
+                <div class="glass-panel tracking-card">
+                    <div class="tracking-header">
+                        <div>
+                            <h3>Tracking ID: <span id="display-id" class="text-primary"></span></h3>
+                            <p class="destination">Destination: <span id="display-destination"></span></p>
+                        </div>
+                        <div class="status-badge" id="display-status-badge">In Transit</div>
+                    </div>
+
+                    <div class="timeline-container">
+                        <ul class="timeline" id="timeline-list">
+                            <!-- Timeline items injected via JS -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= ADMIN DASHBOARD VIEW ================= -->
+        <section id="view-admin" class="view hidden-view">
+            <div class="admin-header">
+                <h2>Admin <span class="text-primary">Dashboard</span></h2>
+                <p>Manage shipments and update delivery statuses globally.</p>
+            </div>
+
+            <div class="admin-grid">
+                <!-- Add New Shipment Panel -->
+                <div class="admin-panel glass-panel">
+                    <h3><i class="fa-solid fa-plus text-primary"></i> New Shipment</h3>
+                    <form id="form-new-parcel">
+                        <div class="form-group">
+                            <label>Sender Name</label>
+                            <input type="text" id="new-sender" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Destination Address</label>
+                            <input type="text" id="new-destination" required>
+                        </div>
+                        <button type="submit" class="btn-primary full-width">Create Shipment</button>
+                    </form>
+                </div>
+
+                <!-- Update Status Panel -->
+                <div class="admin-panel glass-panel">
+                    <h3><i class="fa-solid fa-pen-to-square text-primary"></i> Update Status</h3>
+                    <form id="form-update-status">
+                        <div class="form-group">
+                            <label>Select Shipment</label>
+                            <select id="update-select-id" required>
+                                <option value="" disabled selected>-- Select Tracking ID --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>New Status</label>
+                            <select id="update-select-status" disabled>
+                                <option value="Pending">Pending</option>
+                                <option value="Dispatched">Dispatched</option>
+                                <option value="In Transit">In Transit</option>
+                                <option value="Out for Delivery">Out for Delivery</option>
+                                <option value="Delivered">Delivered</option>
+                            </select>
+                        </div>
+                        <button type="submit" id="btn-update-status" class="btn-primary full-width" disabled>Update Status</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- All Shipments Table -->
+            <div class="admin-table-container glass-panel">
+                <h3><i class="fa-solid fa-boxes-stacked text-primary"></i> All Shipments</h3>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tracking ID</th>
+                                <th>Sender</th>
+                                <th>Destination</th>
+                                <th>Current Status</th>
+                                <th>Date Added</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
