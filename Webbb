@@ -1,0 +1,255 @@
+
+
+Employee Details
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Salary</title>
+    <script>
+        function calculateSalary() {
+            let basic = parseFloat(document.getElementById("basic").value) || 0;
+            let da = parseFloat(document.getElementById("da").value) || 0;
+            let hra = parseFloat(document.getElementById("hra").value) || 0;
+            let allowance = parseFloat(document.getElementById("allowance").value) || 0;
+
+            let total = basic + da + hra + allowance;
+            document.getElementById("total").innerHTML = "Total Salary: " + total;
+        }
+    </script>
+</head>
+<body>
+    <h2>Employee Details</h2>
+
+    Employee ID: <input type="text"><br><br>
+    Name: <input type="text"><br><br>
+    Designation: <input type="text"><br><br>
+
+    <h3>Salary Components</h3>
+    Basic Pay: <input type="number" id="basic"><br><br>
+    DA: <input type="number" id="da"><br><br>
+    HRA: <input type="number" id="hra"><br><br>
+    Allowance: <input type="number" id="allowance"><br><br>
+
+    <button onclick="calculateSalary()">Calculate</button>
+
+    <h3 id="total"></h3>
+</body>
+</html>
+
+
+
+
+Registration form
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration Form</title>
+    <script>
+        function validateForm() {
+            let inputs = document.querySelectorAll("input, textarea");
+
+            for (let i = 0; i < inputs.length; i++) {
+                if (inputs[i].value.trim() === "") {
+                    alert("All fields must be filled!");
+                    return false;
+                }
+            }
+            alert("Form submitted successfully!");
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <h2>Registration Form</h2>
+
+    <form onsubmit="return validateForm()">
+        First Name: <input type="text"><br><br>
+        Last Name: <input type="text"><br><br>
+        Email: <input type="email"><br><br>
+        Password: <input type="password"><br><br>
+        Mobile: <input type="text"><br><br>
+        Address: <textarea></textarea><br><br>
+
+        <input type="submit" value="Submit">
+        <input type="reset" value="Reset">
+    </form>
+</body>
+</html>
+
+
+
+Calculator using JSP and Servlet
+<html>
+<body>
+<form action="CalcServlet" method="post">
+    Number 1: <input type="text" name="num1"><br><br>
+    Number 2: <input type="text" name="num2"><br><br>
+
+    <select name="operation">
+        <option value="add">Add</option>
+        <option value="sub">Subtract</option>
+        <option value="mul">Multiply</option>
+        <option value="div">Divide</option>
+    </select><br><br>
+
+    <input type="submit" value="Calculate">
+</form>
+</body>
+</html>
+
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class CalcServlet extends HttpServlet {
+    public void doPost(HttpServletRequest req, HttpServletResponse res)
+            throws IOException {
+
+        double n1 = Double.parseDouble(req.getParameter("num1"));
+        double n2 = Double.parseDouble(req.getParameter("num2"));
+        String op = req.getParameter("operation");
+
+        double result = 0;
+
+        if(op.equals("add")) result = n1 + n2;
+        else if(op.equals("sub")) result = n1 - n2;
+        else if(op.equals("mul")) result = n1 * n2;
+        else if(op.equals("div")) result = n1 / n2;
+
+        res.setContentType("text/html");
+        PrintWriter out = res.getWriter();
+        out.println("Result: " + result);
+    }
+}
+
+Servelet session tracking
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class LoginServlet extends HttpServlet {
+    public void doPost(HttpServletRequest req, HttpServletResponse res)
+            throws IOException {
+
+        String user = req.getParameter("username");
+
+        HttpSession session = req.getSession();
+        session.setAttribute("user", user);
+
+        res.getWriter().println("Welcome " + user);
+    }
+}
+
+
+
+Android App Hello World
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <TextView
+        android:text="Hello World"
+        android:textSize="24sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btn"
+        android:text="Click Me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
+
+
+
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        Button btn = findViewById(R.id.btn);
+        btn.setOnClickListener(v ->
+            Toast.makeText(this, "Button Clicked!", Toast.LENGTH_SHORT).show()
+        );
+    }
+}
+
+
+Android Calculator
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText android:id="@+id/num1" android:hint="Number 1"/>
+    <EditText android:id="@+id/num2" android:hint="Number 2"/>
+
+    <Button android:text="Add" android:onClick="add"/>
+    <Button android:text="Subtract" android:onClick="sub"/>
+    <Button android:text="Multiply" android:onClick="mul"/>
+    <Button android:text="Divide" android:onClick="div"/>
+
+    <TextView android:id="@+id/result" android:textSize="20sp"/>
+</LinearLayout>
+
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.*;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText n1, n2;
+    TextView res;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        n1 = findViewById(R.id.num1);
+        n2 = findViewById(R.id.num2);
+        res = findViewById(R.id.result);
+    }
+
+    public void add(View v) {
+        calculate("+");
+    }
+
+    public void sub(View v) {
+        calculate("-");
+    }
+
+    public void mul(View v) {
+        calculate("*");
+    }
+
+    public void div(View v) {
+        calculate("/");
+    }
+
+    private void calculate(String op) {
+        double a = Double.parseDouble(n1.getText().toString());
+        double b = Double.parseDouble(n2.getText().toString());
+        double r = 0;
+
+        switch(op) {
+            case "+": r = a + b; break;
+            case "-": r = a - b; break;
+            case "*": r = a * b; break;
+            case "/": r = a / b; break;
+        }
+
+        res.setText("Result: " + r);
+    }
+}
